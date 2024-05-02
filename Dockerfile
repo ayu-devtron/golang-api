@@ -12,16 +12,16 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main
+RUN CGO_ENABLED=0 GOOS=linux go build -o kkwatch
 
 FROM golang:1.18-alpine
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-COPY --from=builder /app/main .
+COPY --from=builder /app/kkwatch .
 # COPY --from=builder /app/.env .  
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["./kkwatch"]
