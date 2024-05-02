@@ -9,6 +9,8 @@ WORKDIR /go/src/github.com/devtron-labs/kubewatch
 
 ADD . /go/src/github.com/devtron-labs/kubewatch
 
+RUN ls -l
+
 RUN CGO_ENABLED=0 GOOS=linux go build -o kubewatch
 
 FROM golang:1.18-alpine
