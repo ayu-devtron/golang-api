@@ -7,11 +7,7 @@ RUN apk add --no-cache git gcc musl-dev
 RUN apk add --update make
 WORKDIR /go/src/github.com/devtron-labs/kubewatch
 
-COPY go.mod go.sum ./
-
-RUN go mod download
-
-COPY . .
+ADD . /go/src/github.com/devtron-labs/kubewatch
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o kubewatch
 
