@@ -11,7 +11,7 @@ ADD . /go/src/github.com/ayu-devtron/golang-api
 
 RUN ls -l
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o kubewatch
+RUN CGO_ENABLED=0 GOOS=linux go build -o golang-api
 
 FROM golang:1.18-alpine
 RUN apk --no-cache add ca-certificates
@@ -20,12 +20,12 @@ RUN adduser -D devtron
 
 COPY --from=builder /go/src/github.com/ayu-devtron/golang-api .
 # COPY --from=builder /app/.env .  
-RUN chown devtron:devtron ./kubewatch
+RUN chown devtron:devtron ./golang-api
 
-RUN chmod +x ./kubewatch
+RUN chmod +x ./golang-api
 
 USER devtron
 
 EXPOSE 8080
 
-CMD ["./kubewatch"]
+CMD ["./golang-api"]
