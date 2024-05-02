@@ -1,10 +1,11 @@
-FROM golang:1.18-alpine as builder
+FROM golang:1.20-alpine3.18 as builder
 
-LABEL maintainer="Putu Krisna Andyartha"
+# LABEL maintainer="Putu Krisna Andyartha"
+RUN echo $GOPATH
 
-RUN apk update && apk add --no-cache git
-
-WORKDIR /app
+RUN apk add --no-cache git gcc musl-dev
+RUN apk add --update make
+WORKDIR /go/src/github.com/devtron-labs/kubewatch
 
 COPY go.mod go.sum ./
 
@@ -12,16 +13,21 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o kkwatch
+RUN CGO_ENABLED=0 GOOS=linux go build -o kubewatch
 
 FROM golang:1.18-alpine
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /root/
+RUN adduser -D devtron
 
-COPY --from=builder /app/kkwatch .
+COPY --from=builder /go/src/github.com/devtron-labs/kubewatch .
 # COPY --from=builder /app/.env .  
+RUN chown devtron:devtron ./kubewatch
+
+RUN chmod +x ./kubewatch
+
+USER devtron
 
 EXPOSE 8080
 
-CMD ["./kkwatch"]
+CMD ["./kubewatch"]
