@@ -13,6 +13,8 @@ RUN ls -l
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o golang-api
 
+RUN ls -l
+
 FROM golang:1.18-alpine
 RUN apk --no-cache add ca-certificates
 
